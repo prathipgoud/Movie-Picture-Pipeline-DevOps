@@ -1,0 +1,38 @@
+source /workspace/set_keys.sh
+aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 139443461009.dkr.ecr.us-east-1.amazonaws.com
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+docker push 139443461009.dkr.ecr.us-east-1.amazonaws.com/backend:v2
+cd /workspace/starter/backend
+docker build -t 139443461009.dkr.ecr.us-east-1.amazonaws.com/backend:v2 .
+docker push 139443461009.dkr.ecr.us-east-1.amazonaws.com/backend:v2
+kubectl set image deployment/backend backend=139443461009.dkr.ecr.us-east-1.amazonaws.com/backend:v2
+kubectl rollout status deployment/backend
+aws eks update-kubeconfig --region us-east-1 --name $(aws eks list-clusters --region us-east-1 --query "clusters[0]" --output text)
+aws eks update-kubeconfig --region us-east-1 --name $(aws eks list-clusters --region us-east-1 --query "clusters[0]" --output text)
+kubectl set image deployment/backend backend=139443461009.dkr.ecr.us-east-1.amazonaws.com/backend:v2
+kubectl rollout status deployment/backend\
+kubectl get pods
+kubectl describe pod -l app=backend
+kubectl logs -l app=backend --tail=30\
+kubectl get nodes
+aws ec2 describe-instances --region us-east-1 --filters "Name=instance-state-name,Values=running,pending" --query "Reservations[*].Instances[*].[InstanceId,State.Name]" --output table
+kubectl get nodes
+aws ec2 describe-instances --region us-east-1 --filters "Name=instance-state-name,Values=running,pending" --query "Reservations[*].Instances[*].[InstanceId,State.Name]" --output text --no-cli-pager
+kubectl get nodes -w

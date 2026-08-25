@@ -1,0 +1,9 @@
+.terraform/
+*.tfstate
+*.tfstate.*
+.terraform.lock.hcl
+*.tar.gz
+*.zip
+node_modules?
+node_modules/
+set_keys.sh
