@@ -37,9 +37,8 @@ jobs:
           ECR_REPOSITORY: frontend
           IMAGE_TAG: latest
         run: |
-          BACKEND_URL=$(kubectl get svc service-backend -o jsonpath='{.status.loadBalancer.ingress[0].hostname}' 2>/dev/null || echo "localhost:8080")
           cd starter/frontend
-          docker build --build-arg REACT_APP_MOVIE_API_URL=http://$BACKEND_URL -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker build --build-arg REACT_APP_MOVIE_API_URL=http://a9ecaf08e6fb848499ceb43646e160d6-426388837.us-east-1.elb.amazonaws.com -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
       - name: Deploy to EKS
@@ -47,3 +46,4 @@ jobs:
           cd starter/frontend/k8s
           kustomize edit set image frontend=${{ steps.login-ecr.outputs.registry }}/frontend:latest
           kustomize build . | kubectl apply -f -
+          kubectl rollout restart deployment/frontend
